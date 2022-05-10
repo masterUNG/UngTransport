@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ungtransport/utility/my_constant.dart';
@@ -20,6 +22,7 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   var typeUsers = MyConstant.typeUsers;
   String? typeUser;
+  File? file;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +76,12 @@ class _CreateAccountState extends State<CreateAccount> {
           newCenter(
             widget: ShowButton(
               label: 'Create New Account',
-              pressFunc: () {},
+              pressFunc: () {
+                if (file == null) {
+                  MyDialog(context: context).normalDialog(
+                      title: 'Non Avatar ?', subTitle: 'Please Take Agatar');
+                }
+              },
             ),
           ),
         ],
@@ -114,9 +122,14 @@ class _CreateAccountState extends State<CreateAccount> {
       height: 250,
       child: Stack(
         children: [
-          const ShowImage(
-            path: 'images/avatar.png',
-          ),
+          file == null
+              ? const ShowImage(
+                  path: 'images/avatar.png',
+                )
+              : CircleAvatar(
+                  radius: 200,
+                  backgroundImage: FileImage(file!),
+                ),
           Positioned(
             right: 0,
             bottom: 0,
@@ -130,10 +143,12 @@ class _CreateAccountState extends State<CreateAccount> {
                     label1: 'Camera',
                     pressFunc1: () {
                       Navigator.pop(context);
+                      processTakePhoto(source: ImageSource.camera);
                     },
                     label2: 'Gallery',
                     pressFunc2: () {
-                       Navigator.pop(context);
+                      Navigator.pop(context);
+                      processTakePhoto(source: ImageSource.gallery);
                     });
               },
             ),
@@ -149,6 +164,11 @@ class _CreateAccountState extends State<CreateAccount> {
       maxWidth: 800,
       maxHeight: 800,
     );
+
+    if (result != null) {
+      file = File(result.path);
+      setState(() {});
+    }
   }
 
   Row newCenter({required Widget widget}) {
