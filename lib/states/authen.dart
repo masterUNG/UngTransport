@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ungtransport/states/create_account.dart';
 import 'package:ungtransport/utility/my_constant.dart';
 import 'package:ungtransport/widges/show_button.dart';
 import 'package:ungtransport/widges/show_form.dart';
@@ -19,7 +20,7 @@ class Authen extends StatelessWidget {
           behavior: HitTestBehavior.opaque,
           onTap: () => FocusScope.of(context).requestFocus(FocusScopeNode()),
           child: Container(
-            decoration: MyConstant().planBox(),
+            decoration: MyConstant().imageBox(),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +30,7 @@ class Authen extends StatelessWidget {
                   newEmail(),
                   newPassword(),
                   newButton(),
-                  newCreateAccount(),
+                  newCreateAccount(context: context),
                 ],
               ),
             ),
@@ -41,24 +42,30 @@ class Authen extends StatelessWidget {
 
   Row newLeftSite({required Widget widget}) {
     return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 250,
-                      child: widget,
-                    ),
-                  ],
-                );
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 250,
+          child: widget,
+        ),
+      ],
+    );
   }
 
-  Row newCreateAccount() {
+  Row newCreateAccount({required BuildContext context}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const ShowText(label: 'Non Account ? '),
         ShowTextButton(
           label: 'Create Account',
-          pressFunc: () {},
+          pressFunc: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateAccount(),
+                ));
+          },
         )
       ],
     );
@@ -98,7 +105,7 @@ class Authen extends StatelessWidget {
       children: [
         SizedBox(
           width: constraints.maxWidth * 0.3,
-          child:  const ShowImage(),
+          child: const ShowImage(),
         ),
       ],
     );

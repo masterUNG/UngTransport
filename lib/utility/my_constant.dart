@@ -6,9 +6,25 @@ class MyConstant {
   static Color dark = const Color.fromARGB(255, 3, 39, 93);
   static Color light = const Color.fromARGB(255, 226, 205, 40);
 
+  static List<String> typeUsers = [
+    'Owner',
+    'Customer',
+    'Driver',
+  ];
+
   //method
 
+  BoxDecoration curveBorderBox() => BoxDecoration(
+        border: Border.all(color: MyConstant.dark),
+        borderRadius: BorderRadius.circular(15),
+      );
+
   BoxDecoration planBox() => BoxDecoration(color: light.withOpacity(0.5));
+
+  BoxDecoration imageBox() => const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('images/bg.jpg'), fit: BoxFit.cover),
+      );
 
   TextStyle h1Style() {
     return TextStyle(
