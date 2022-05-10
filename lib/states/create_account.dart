@@ -126,7 +126,15 @@ class _CreateAccountState extends State<CreateAccount> {
               pressFunc: () {
                 MyDialog(context: context).twoWayDialog(
                     title: 'Choose Avatar ?',
-                    subTitle: 'Please tap Camera or Gallery');
+                    subTitle: 'Please tap Camera or Gallery',
+                    label1: 'Camera',
+                    pressFunc1: () {
+                      Navigator.pop(context);
+                    },
+                    label2: 'Gallery',
+                    pressFunc2: () {
+                       Navigator.pop(context);
+                    });
               },
             ),
           ),

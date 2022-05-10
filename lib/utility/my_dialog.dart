@@ -11,8 +11,14 @@ class MyDialog {
     required this.context,
   });
 
-  Future<void> twoWayDialog(
-      {required String title, required String subTitle}) async {
+  Future<void> twoWayDialog({
+    required String title,
+    required String subTitle,
+    required String label1,
+    required String label2,
+    required Function() pressFunc1,
+    required Function() pressFunc2,
+  }) async {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -31,16 +37,12 @@ class MyDialog {
         ),
         actions: [
           ShowTextButton(
-            label: 'Camera',
-            pressFunc: () {
-               Navigator.pop(context);
-            },
+            label: label1,
+            pressFunc: pressFunc1,
           ),
           ShowTextButton(
-            label: 'Gallery',
-            pressFunc: () {
-               Navigator.pop(context);
-            },
+            label: label2,
+            pressFunc: pressFunc2,
           ),
           ShowTextButton(
             label: 'Cancel',
