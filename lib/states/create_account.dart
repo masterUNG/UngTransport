@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ungtransport/utility/my_constant.dart';
+import 'package:ungtransport/utility/my_dialog.dart';
 import 'package:ungtransport/widges/show_button.dart';
 import 'package:ungtransport/widges/show_form.dart';
 import 'package:ungtransport/widges/show_icon_button.dart';
@@ -80,10 +82,12 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   Widget newTypeUser() {
-    return Container(padding: const EdgeInsets.only(left: 8),
+    return Container(
+      padding: const EdgeInsets.only(left: 8),
       margin: const EdgeInsets.only(top: 16),
       decoration: MyConstant().curveBorderBox(),
-      width: 250,height: 40,
+      width: 250,
+      height: 40,
       child: DropdownButton<dynamic>(
           hint: const ShowText(label: 'Please Choose TypeUser'),
           value: typeUser,
@@ -119,11 +123,23 @@ class _CreateAccountState extends State<CreateAccount> {
             child: ShowIconButton(
               size: 48,
               iconData: Icons.add_a_photo,
-              pressFunc: () {},
+              pressFunc: () {
+                MyDialog(context: context).twoWayDialog(
+                    title: 'Choose Avatar ?',
+                    subTitle: 'Please tap Camera or Gallery');
+              },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> processTakePhoto({required ImageSource source}) async {
+    var result = await ImagePicker().pickImage(
+      source: source,
+      maxWidth: 800,
+      maxHeight: 800,
     );
   }
 

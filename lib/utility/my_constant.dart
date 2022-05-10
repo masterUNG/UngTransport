@@ -12,6 +12,8 @@ class MyConstant {
     'Driver',
   ];
 
+  static List<int> idTypeUsers = [0, 1, 2];
+
   //method
 
   BoxDecoration curveBorderBox() => BoxDecoration(
