@@ -1,17 +1,28 @@
+// ignore_for_file: avoid_print
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:ungtransport/states/create_account.dart';
+import 'package:ungtransport/models/authen_model.dart';
 import 'package:ungtransport/states/regester.dart';
 import 'package:ungtransport/utility/my_constant.dart';
+import 'package:ungtransport/utility/my_dialog.dart';
 import 'package:ungtransport/widges/show_button.dart';
 import 'package:ungtransport/widges/show_form.dart';
 import 'package:ungtransport/widges/show_image.dart';
 import 'package:ungtransport/widges/show_text.dart';
 import 'package:ungtransport/widges/show_text_button.dart';
 
-class Authen extends StatelessWidget {
+class Authen extends StatefulWidget {
   const Authen({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<Authen> createState() => _AuthenState();
+}
+
+class _AuthenState extends State<Authen> {
+  String? rollerid, username, password;
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +34,19 @@ class Authen extends StatelessWidget {
           child: Container(
             decoration: MyConstant().imageBox(),
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  newLeftSite(widget: newLogo(constraints)),
-                  newLeftSite(widget: newText()),
-                  newEmail(),
-                  newPassword(),
-                  newButton(),
-                  newCreateAccount(context: context),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    newLeftSite(widget: newLogo(constraints)),
+                    newLeftSite(widget: newText()),
+                    newRollerId(),
+                    newUser(),
+                    newPassword(),
+                    newButton(),
+                    newCreateAccount(context: context),
+                  ],
+                ),
               ),
             ),
           ),
@@ -40,6 +54,14 @@ class Authen extends StatelessWidget {
       }),
     );
   }
+
+  ShowForm newRollerId() => ShowForm(
+      textInputType: TextInputType.number,
+      label: 'RollerId :',
+      iconData: Icons.account_box_outlined,
+      changeFunc: (String string) {
+        rollerid = string.trim();
+      });
 
   Row newLeftSite({required Widget widget}) {
     return Row(
@@ -74,7 +96,16 @@ class Authen extends StatelessWidget {
 
   ShowButton newButton() => ShowButton(
         label: 'Login',
-        pressFunc: () {},
+        pressFunc: () {
+          if ((rollerid?.isEmpty ?? true) ||
+              (username?.isEmpty ?? true) ||
+              (password?.isEmpty ?? true)) {
+            MyDialog(context: context).normalDialog(
+                title: 'Have Space ?', subTitle: 'Please Fill Every Blank');
+          } else {
+            processCheckAuthen();
+          }
+        },
       );
 
   ShowForm newPassword() {
@@ -82,15 +113,20 @@ class Authen extends StatelessWidget {
       label: 'Password :',
       iconData: Icons.lock_outline,
       obsecu: true,
-      changeFunc: (String string) {},
+      changeFunc: (String string) {
+        password = string.trim();
+      },
     );
   }
 
-  ShowForm newEmail() {
+  ShowForm newUser() {
     return ShowForm(
-      label: 'Email :',
+      textInputType: TextInputType.number,
+      label: 'UserName :',
       iconData: Icons.contact_mail_outlined,
-      changeFunc: (String string) {},
+      changeFunc: (String string) {
+        username = string.trim();
+      },
     );
   }
 
@@ -110,5 +146,17 @@ class Authen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Future<void> processCheckAuthen() async {
+    AuthenModel authenModel = AuthenModel(
+        rollerid: rollerid!, username: username!, password: password!);
+    await Dio()
+        .post(MyConstant.pathAuthen, data: authenModel.toMap())
+        .then((value) {
+      print('value authen ==> $value');
+    }).catchError((onError) {
+      print('onError Authen ==> ${onError.toString()}');
+    });
   }
 }

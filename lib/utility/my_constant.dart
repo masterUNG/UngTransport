@@ -12,7 +12,9 @@ class MyConstant {
     'Driver',
   ];
 
-  static String pathRegister = 'https://www.rollerglobal.com/api/api/Member/register';
+  static String pathRegister =
+      'https://www.rollerglobal.com/api/api/Member/register';
+  static String pathAuthen = 'https://www.rollerglobal.com/api/api/Member/login';
 
   //method
 
