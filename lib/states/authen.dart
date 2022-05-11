@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ungtransport/states/create_account.dart';
+import 'package:ungtransport/states/regester.dart';
 import 'package:ungtransport/utility/my_constant.dart';
 import 'package:ungtransport/widges/show_button.dart';
 import 'package:ungtransport/widges/show_form.dart';
@@ -63,7 +64,7 @@ class Authen extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CreateAccount(),
+                  builder: (context) => Register(),
                 ));
           },
         )

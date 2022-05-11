@@ -12,7 +12,7 @@ class MyConstant {
     'Driver',
   ];
 
-  static List<int> idTypeUsers = [0, 1, 2];
+  static String pathRegister = 'https://www.rollerglobal.com/api/api/Member/register';
 
   //method
 

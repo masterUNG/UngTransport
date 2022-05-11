@@ -1,9 +1,10 @@
-
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ungtransport/states/authen.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverride();
   runApp(const MyApp());
 }
 
@@ -17,5 +18,13 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       home: Authen(),
     );
+  }
+}
+
+class MyHttpOverride extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (cert, host, port) => true;
   }
 }
