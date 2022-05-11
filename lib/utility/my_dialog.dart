@@ -50,8 +50,12 @@ class MyDialog {
     );
   }
 
-  Future<void> normalDialog(
-      {required String title, required String subTitle}) async {
+  Future<void> normalDialog({
+    required String title,
+    required String subTitle,
+    Function()? pressFunc,
+    Widget? widget,
+  }) async {
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -59,11 +63,13 @@ class MyDialog {
                   title: title, subTitle: subTitle, path: 'images/logo.png'),
               actions: [
                 ShowTextButton(
-                    label: 'OK',
-                    pressFunc: () {
-                      Navigator.pop(context);
-                    })
+                  label: 'OK',
+                  pressFunc: pressFunc ?? () {
+                    Navigator.pop(context);
+                  },
+                )
               ],
+              content: widget ?? const SizedBox(),
             ));
   }
 }

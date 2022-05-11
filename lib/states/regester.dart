@@ -2,6 +2,8 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:ungtransport/models/response_false_model.dart';
+import 'package:ungtransport/models/response_true_model.dart';
 import 'package:ungtransport/models/user_model.dart';
 import 'package:ungtransport/utility/my_constant.dart';
 import 'package:ungtransport/utility/my_dialog.dart';
@@ -31,7 +33,7 @@ class _RegisterState extends State<Register> {
     DateTime dateTime = DateTime.now();
     int year = dateTime.year + 543;
     yearRegis = year.toString();
-    print('yearRegis = $yearRegis');
+    // print('yearRegis = $yearRegis');
   }
 
   @override
@@ -96,6 +98,10 @@ class _RegisterState extends State<Register> {
                             MyDialog(context: context).normalDialog(
                                 title: 'Phone 10 digi',
                                 subTitle: 'Please Fill Phone 10 digi');
+                          } else if (phoneNumber!.contains('')) {
+                            MyDialog(context: context).normalDialog(
+                                title: 'มีช่องว่างแทรก',
+                                subTitle: 'ห้ามมีช่องว่างแทรก');
                           } else {
                             processRegister();
                           }
@@ -111,7 +117,8 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> processRegister() async {
-    print('phoneNumber ==> $phoneNumber');
+    // print('phoneNumber ==> $phoneNumber');
+
     UserModel userModel = UserModel(
         year: yearRegis!,
         gentype: gentype,
@@ -119,10 +126,51 @@ class _RegisterState extends State<Register> {
         infriendid: infriendid);
 
     Map<String, dynamic> map = userModel.toMap();
-    print('map ==> $map');
+    // print('map ==> $map');
 
     await Dio().post(MyConstant.pathRegister, data: map).then((value) {
       print('Success Register value ==> $value');
+
+      ResponseFalseModel responseFalseModel =
+          ResponseFalseModel.fromMap(value.data);
+
+      // print('responseFalseModel ==> ${responseFalseModel.toMap()}');
+
+      if (responseFalseModel.ResponseStatus == 'Failed') {
+        MyDialog(context: context).normalDialog(
+            title: 'Cannot Register',
+            subTitle: responseFalseModel.ResponseMessages);
+      } else {
+        //Register Success
+        print('Register Success valuet ==> $value');
+        ResponseTrueModel responseTrueModel =
+            ResponseTrueModel.fromJson(value.data);
+
+        print('responsTrueModel ==> ${responseTrueModel.toJson()}');
+
+        MyDialog(context: context).normalDialog(
+            title: 'Your Login',
+            subTitle: 'โปรดเก็บค่านี่ไว้ Login in',
+            widget: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ShowText(
+                    label:
+                        'rollerid ==> ${responseTrueModel.responseData![0].rollerid}'),
+                ShowText(
+                    label:
+                        'username ==> ${responseTrueModel.responseData![0].username}'),
+                ShowText(
+                    label:
+                        'password ==> ${responseTrueModel.responseData![0].password}'),
+              ],
+            ),
+            pressFunc: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            });
+      }
     }).catchError((onError) {
       print('onError ==> ${onError.toString()}');
     });
