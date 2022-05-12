@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ungtransport/bodys/get_location.dart';
+import 'package:ungtransport/bodys/read_api_token.dart';
 import 'package:ungtransport/utility/my_constant.dart';
 import 'package:ungtransport/utility/my_dialog.dart';
 import 'package:ungtransport/widges/show_listtile.dart';
@@ -14,6 +16,9 @@ class MyService extends StatefulWidget {
 
 class _MyServiceState extends State<MyService> {
   String? token;
+  var widgets = <Widget>[];
+  int indexWidget = 0;
+  bool load = true;
 
   @override
   void initState() {
@@ -24,7 +29,13 @@ class _MyServiceState extends State<MyService> {
   Future<void> findToken() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     token = preferences.getString(MyConstant.keyToken);
-    print('token ที่ใช้งาน ==> $token');
+
+    widgets.add(ReadApiToken(
+      token: token!,
+    ));
+    widgets.add(const GetLocationShowMap());
+    load = false;
+    setState(() {});
   }
 
   @override
@@ -38,6 +49,12 @@ class _MyServiceState extends State<MyService> {
               children: [
                 UserAccountsDrawerHeader(accountName: null, accountEmail: null),
                 InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      indexWidget = 0;
+                    });
+                  },
                   child: const ShowListTile(
                     title: 'ReadAPI',
                     subTitle: 'Read API by Token',
@@ -45,7 +62,13 @@ class _MyServiceState extends State<MyService> {
                     size: 36,
                   ),
                 ),
-                 InkWell(
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      indexWidget = 1;
+                    });
+                  },
                   child: const ShowListTile(
                     title: 'GetLocation',
                     subTitle: 'Get Location and show Map',
@@ -59,7 +82,9 @@ class _MyServiceState extends State<MyService> {
           ],
         ),
       ),
-      body: ShowText(label: 'This is my Service'),
+      body: load
+          ? const Center(child: CircularProgressIndicator())
+          : widgets[indexWidget],
     );
   }
 
