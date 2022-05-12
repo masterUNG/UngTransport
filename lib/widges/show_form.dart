@@ -10,6 +10,7 @@ class ShowForm extends StatelessWidget {
   final bool? obsecu;
   final Function(String) changeFunc;
   final TextInputType? textInputType;
+  final TextEditingController? controller;
   const ShowForm({
     Key? key,
     required this.label,
@@ -17,6 +18,7 @@ class ShowForm extends StatelessWidget {
     this.obsecu,
     required this.changeFunc,
     this.textInputType,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -25,7 +27,8 @@ class ShowForm extends StatelessWidget {
       margin: const EdgeInsets.only(top: 16),
       width: 250,
       height: 40,
-      child: TextFormField(keyboardType: textInputType ?? TextInputType.text,
+      child: TextFormField(controller: controller,
+        keyboardType: textInputType ?? TextInputType.text,
         onChanged: changeFunc,
         obscureText: obsecu ?? false,
         style: MyConstant().h3Style(),

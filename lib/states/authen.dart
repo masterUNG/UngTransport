@@ -3,6 +3,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:ungtransport/models/authen_model.dart';
+import 'package:ungtransport/models/response_false_model.dart';
+import 'package:ungtransport/models/success_authen_model.dart';
 import 'package:ungtransport/states/regester.dart';
 import 'package:ungtransport/utility/my_constant.dart';
 import 'package:ungtransport/utility/my_dialog.dart';
@@ -23,6 +25,26 @@ class Authen extends StatefulWidget {
 
 class _AuthenState extends State<Authen> {
   String? rollerid, username, password;
+
+  TextEditingController rollerIdController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    forTestAuthen();
+  }
+
+  void forTestAuthen() {
+    rollerIdController.text = '6510000078';
+    userNameController.text = '0818595305';
+    passwordController.text = '864586';
+
+    rollerid = rollerIdController.text;
+    username = userNameController.text;
+    password = passwordController.text;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +78,7 @@ class _AuthenState extends State<Authen> {
   }
 
   ShowForm newRollerId() => ShowForm(
+      controller: rollerIdController,
       textInputType: TextInputType.number,
       label: 'RollerId :',
       iconData: Icons.account_box_outlined,
@@ -110,6 +133,7 @@ class _AuthenState extends State<Authen> {
 
   ShowForm newPassword() {
     return ShowForm(
+      controller: passwordController,
       label: 'Password :',
       iconData: Icons.lock_outline,
       obsecu: true,
@@ -121,6 +145,7 @@ class _AuthenState extends State<Authen> {
 
   ShowForm newUser() {
     return ShowForm(
+      controller: userNameController,
       textInputType: TextInputType.number,
       label: 'UserName :',
       iconData: Icons.contact_mail_outlined,
@@ -151,12 +176,32 @@ class _AuthenState extends State<Authen> {
   Future<void> processCheckAuthen() async {
     AuthenModel authenModel = AuthenModel(
         rollerid: rollerid!, username: username!, password: password!);
+    print('authan ==> ${authenModel.toMap()}');
     await Dio()
         .post(MyConstant.pathAuthen, data: authenModel.toMap())
         .then((value) {
-      print('value authen ==> $value');
+      print('value authen ==> ${value}');
+
+      ResponseFalseModel responseFalseModel =
+          ResponseFalseModel.fromMap(value.data);
+      print('ResponseStatus ==>> ${responseFalseModel.ResponseStatus}');
+
+      if (responseFalseModel.ResponseStatus == 'Failed') {
+        MyDialog(context: context).normalDialog(
+            title: 'Login False',
+            subTitle: responseFalseModel.ResponseMessages);
+      } else {
+        SuccessAuthenModel successAuthenModel =
+            SuccessAuthenModel.fromJson(value.data);
+        processSaveUser(successAuthenModel: successAuthenModel);
+      }
     }).catchError((onError) {
       print('onError Authen ==> ${onError.toString()}');
     });
+  }
+
+  void processSaveUser({required SuccessAuthenModel successAuthenModel}) {
+    String token = successAuthenModel.responseData![0].token.toString();
+    print('token ==>> $token');
   }
 }
