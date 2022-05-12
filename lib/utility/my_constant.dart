@@ -6,6 +6,11 @@ class MyConstant {
   static Color dark = const Color.fromARGB(255, 3, 39, 93);
   static Color light = const Color.fromARGB(255, 226, 205, 40);
 
+  static String keyRollerId = 'rollerid';
+  static String keyUserName = 'username';
+  static String keyPassword = 'password';
+  static String keyToken = 'token';
+
   static List<String> typeUsers = [
     'Owner',
     'Customer',
@@ -14,7 +19,8 @@ class MyConstant {
 
   static String pathRegister =
       'https://www.rollerglobal.com/api/api/Member/register';
-  static String pathAuthen = 'https://www.rollerglobal.com/api/api/Member/login';
+  static String pathAuthen =
+      'https://www.rollerglobal.com/api/api/Member/login';
 
   //method
 

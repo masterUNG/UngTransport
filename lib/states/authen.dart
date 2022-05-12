@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ungtransport/models/authen_model.dart';
 import 'package:ungtransport/models/response_false_model.dart';
 import 'package:ungtransport/models/success_authen_model.dart';
@@ -200,8 +201,17 @@ class _AuthenState extends State<Authen> {
     });
   }
 
-  void processSaveUser({required SuccessAuthenModel successAuthenModel}) {
+  Future<void> processSaveUser(
+      {required SuccessAuthenModel successAuthenModel}) async {
     String token = successAuthenModel.responseData![0].token.toString();
     print('token ==>> $token');
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString(MyConstant.keyRollerId, rollerid!);
+    preferences.setString(MyConstant.keyUserName, username!);
+    preferences.setString(MyConstant.keyPassword, password!);
+    preferences.setString(MyConstant.keyToken, token);
+
+    Navigator.pushNamedAndRemoveUntil(context, '/myService', (route) => false);
   }
 }
