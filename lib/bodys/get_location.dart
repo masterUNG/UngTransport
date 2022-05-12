@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ungtransport/utility/my_dialog.dart';
 
 class GetLocationShowMap extends StatefulWidget {
@@ -20,6 +21,8 @@ class _GetLocationShowMapState extends State<GetLocationShowMap> {
     super.initState();
     findLatLng();
   }
+
+  
 
   Future<void> findLatLng() async {
     bool locationEnable;
@@ -73,12 +76,32 @@ class _GetLocationShowMapState extends State<GetLocationShowMap> {
     return position!;
   }
 
+  Set<Marker> myMarker() {
+    return <Marker>[
+      Marker(
+        markerId: MarkerId('id'),
+        position: LatLng(lat!, lng!)
+      ),
+      Marker(
+        markerId: MarkerId('id1'),
+        position: LatLng(13.678060167212296, 100.58310091480081)
+      ),
+    ].toSet();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: load
           ? const Center(child: CircularProgressIndicator())
-          : Text('This is GetLocation \n lat = $lat, lng = $lng'),
+          : GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(lat!, lng!),
+                zoom: 16,
+              ),
+              onMapCreated: (value) {},
+              markers: myMarker(),
+            ),
     );
   }
 }
